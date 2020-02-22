@@ -27,6 +27,7 @@ module LoopInParagraphTest
     assert File.stat(filename).size > 0
 
     correct = Office::WordDocument.new(File.join(File.dirname(__FILE__), '..', '..', 'content', 'template', 'for_loops', 'correct_render', 'in_same_paragraph_for_loop_test.docx'))
+
     our_render = Office::WordDocument.new(filename)
     assert docs_are_equivalent?(correct, our_render)
 
