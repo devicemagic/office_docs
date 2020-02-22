@@ -147,12 +147,11 @@ module Word
       end
 
       # Special identifiers - check this last because real placeholders should take preference
-      result = special_case_identifiers(field_identifier, data) if result.blank?
+      result = special_case_identifiers(field_recurse, data) if result.blank?
       result
     end
 
-    def self.special_case_identifiers(field_identifier, data)
-      field_recurse = field_identifier.split('.')
+    def self.special_case_identifiers(field_recurse, data)
       case field_recurse[-1]
       when 'repeat_group_answer_number'
         # Can only really be called on a group - so the identifier before should be a group identifier
