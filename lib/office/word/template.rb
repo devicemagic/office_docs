@@ -148,7 +148,7 @@ module Word
 
       # Special identifiers - check this last because real placeholders should take preference
       result = special_case_identifiers(field_identifier, data) if result.blank?
-      result || ""
+      result
     end
 
     def self.special_case_identifiers(field_identifier, data)
@@ -162,6 +162,8 @@ module Word
         else
           ""
         end
+      else
+        ""
       end
     end
 
