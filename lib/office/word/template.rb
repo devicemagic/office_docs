@@ -145,7 +145,25 @@ module Word
           break
         end
       end
+
+      # Special identifiers - check this last because real placeholders should take preference
+      result = special_case_identifiers(field_recurse, data) if result.blank?
       result
+    end
+
+    def self.special_case_identifiers(field_recurse, data)
+      case field_recurse[-1]
+      when 'repeat_group_answer_number'
+        # Can only really be called on a group - so the identifier before should be a group identifier
+        group_index = field_recurse[-2].to_s.scan(/\[(\d+)\]/).flatten[-1]
+        if group_index.present?
+          (group_index.to_i + 1).to_s
+        else
+          ""
+        end
+      else
+        ""
+      end
     end
 
     def self.parse_array_info_from_identifier(identifier)

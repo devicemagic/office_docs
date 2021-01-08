@@ -16,4 +16,6 @@ Gem::Specification.new do |spec|
   spec.add_dependency("liquid", '3.0.6')
   spec.add_development_dependency("equivalent-xml", ">= 0.2.9")
   spec.add_development_dependency("pry")
+  spec.add_development_dependency("rake")
+  spec.add_development_dependency("test-unit")
 end

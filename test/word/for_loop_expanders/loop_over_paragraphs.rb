@@ -10,6 +10,9 @@ module LoopOverParagraphsTest
 
   COMPLEX_FOR_LOOP = File.join(File.dirname(__FILE__), '..', '..', 'content', 'template', 'for_loops', 'complex_for_loop_word_template.docx')
 
+  QUESTION_NUMBER_PLACEHOLDER_IN_LOOP = File.join(File.dirname(__FILE__), '..', '..', 'content', 'template', 'for_loops', 'question_number_placeholder_in_loop.docx')
+  QUESTION_NUMBER_PLACEHOLDER_IN_NESTED_LOOP = File.join(File.dirname(__FILE__), '..', '..', 'content', 'template', 'for_loops', 'question_number_placeholder_in_nested_loop.docx')
+
   #DIFFERENT PARAGRAPH LOOPS
   #
   #
@@ -323,5 +326,91 @@ module LoopOverParagraphsTest
       }
     }
     check_template(path_to_template, path_to_correct_render, {render_params: render_params})
+  end
+
+  def test_question_number_placeholder_in_loop
+    file = File.new('test_question_number_placeholder_in_loop.docx', 'w')
+    file.close
+    filename = file.path
+
+    doc = Office::WordDocument.new(QUESTION_NUMBER_PLACEHOLDER_IN_LOOP)
+    template = Word::Template.new(doc)
+    template.render(
+      {'fields' =>
+        {'Group' => [
+          {'name' => 'Bob', 'age' => 5},
+          {'name' => 'Sam', 'age' => 13},
+          {'name' => 'Jill', 'age' => 25},
+        ]
+      }
+    })
+    template.word_document.save(filename)
+
+    assert File.file?(filename)
+    assert File.stat(filename).size > 0
+
+    correct = Office::WordDocument.new(File.join(File.dirname(__FILE__), '..', '..', 'content', 'template', 'for_loops', 'correct_render', 'test_question_number_placeholder_in_loop.docx'))
+    our_render = Office::WordDocument.new(filename)
+    assert docs_are_equivalent?(correct, our_render)
+
+    File.delete(filename)
+  end
+
+  # TOOO Numbers in nested loops
+  def test_complex_loop_in_different_paragraph
+    file = File.new('text_question_number_placeholder_in_nested_loop.docx', 'w')
+    file.close
+    filename = file.path
+
+    doc = Office::WordDocument.new(QUESTION_NUMBER_PLACEHOLDER_IN_NESTED_LOOP)
+    template = Word::Template.new(doc)
+    template.render(
+      {'fields' =>
+        {'Group' => [
+          {
+            'name' => 'Bob',
+            'age' => 5,
+            'toys' => [
+              {
+                'name' => 'Speedy',
+                'type' => 'Car'
+              },
+              {
+                'name' => 'Bill',
+                'type' => 'Doll'
+              }
+            ]
+          },
+          {
+            'name' => 'Sam',
+            'age' => 13,
+            'toys' => [
+              {
+                'name' => 'Equalizer',
+                'type' => 'Gun'
+              },
+              {
+                'name' => 'TimeSink',
+                'type' => 'Nintendo'
+              }
+            ]
+          },
+          {
+            'name' => 'Jill',
+            'age' => 25
+          },
+        ]
+      }
+    })
+    template.word_document.save(filename)
+
+    assert File.file?(filename)
+    assert File.stat(filename).size > 0
+
+    correct = Office::WordDocument.new(File.join(File.dirname(__FILE__), '..', '..', 'content', 'template', 'for_loops', 'correct_render', 'text_question_number_placeholder_in_nested_loop.docx'))
+    our_render = Office::WordDocument.new(filename)
+    assert docs_are_equivalent?(correct, our_render)
+
+    File.delete(filename)
   end
 end
