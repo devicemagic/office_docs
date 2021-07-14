@@ -21,7 +21,7 @@ module Word
     def image_constraints(image, width, height)
       begin
         ratio = [1.0 * width / image.columns, 1.0 * height / image.rows].min
-        {width: image.columns * ratio, height: image.rows * ratio}
+        {width: (image.columns * ratio).to_i, height: (image.rows * ratio).to_i}
       rescue
         {width: image.columns, height: image.rows}
       end
