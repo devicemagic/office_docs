@@ -187,7 +187,7 @@ class TemplateTest < Test::Unit::TestCase
   end
 
   def test_image_resizing
-    doc = Office::WordDocument.new(File.join(File.dirname(__FILE__), 'content', 'image_resize_noresample_test.docx'))
+    doc = Office::WordDocument.new(File.join(File.dirname(__FILE__), '..', 'content', 'image_resize_noresample_test.docx'))
     doc.render_template({"IMAGE"=> test_image})
 
     Dir.mktmpdir do |dir|
