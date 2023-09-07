@@ -9,11 +9,16 @@ module Word
       #
       #
 
+      #total_time -> 0.004501
       def get_placeholders(paragraphs)
+        now = Time.now
+
         placeholders = []
         paragraphs.each_with_index do |p, i|
           placeholders += get_placeholders_from_paragraph(p, i)
         end
+        end_time = Time.now
+        total_time = end_time - now
         placeholders
         byebug
       end
