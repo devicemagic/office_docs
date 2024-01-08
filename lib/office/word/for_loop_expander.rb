@@ -10,13 +10,14 @@ module Word
 
     attr_accessor :main_doc, :data, :options, :placeholders
 
-    FOR_LOOP_START_MATCHER = /for (\w+) in (.+)/
-    FOR_LOOP_END_MATCHER = /endfor/
+    FOR_LOOP_START_MATCHER = /for (\w+) in (.+)/.freeze
+    FOR_LOOP_END_MATCHER = /endfor/.freeze
 
     def initialize(main_doc, data, options = {})
-      self.main_doc = main_doc
-      self.data = data
-      self.options = options
+      @main_doc = main_doc
+      @data = data
+      @options = options
+      @placeholders = []
     end
 
     def expand_for_loops(container)
@@ -25,11 +26,12 @@ module Word
       self.placeholders = Word::PlaceholderFinder.get_placeholders(paragraphs)
       expanded_loops = false
 
-      while there_are_for_loop_placeholders(placeholders)
+      while there_are_for_loop_placeholders
         i = 0
         while i < placeholders.length
           start_placeholder = placeholders[i]
-          if start_placeholder[:placeholder_text].match(FOR_LOOP_START_MATCHER)
+          start_match = start_placeholder[:placeholder_text].match(FOR_LOOP_START_MATCHER)
+          if start_match
             end_index = get_end_index(i)
             expand_loop(i, end_index)
             expanded_loops = true
@@ -40,7 +42,7 @@ module Word
           end
         end
         paragraphs = resync_container(container)
-        self.placeholders = Word::PlaceholderFinder.get_placeholders(paragraphs)
+        @placeholders = Word::PlaceholderFinder.get_placeholders(paragraphs)
       end
 
       # i = 0
@@ -55,12 +57,11 @@ module Word
 
     def get_end_index(start_index)
       level = 0
-      placeholders[(start_index+1)..-1].each_with_index do |p, j|
-        if p[:placeholder_text].match(FOR_LOOP_END_MATCHER) && level == 0
-          return (start_index+1)+j
-        elsif p[:placeholder_text].match(FOR_LOOP_END_MATCHER) && level > 0
-          level -= 1
-        elsif p[:placeholder_text].match(FOR_LOOP_START_MATCHER)
+      placeholders.drop(start_index + 1).each_with_index do |placeholder, index|
+        case placeholder[:placeholder_text]
+        when FOR_LOOP_END_MATCHER
+          level.zero? ? (return start_index + 1 + index) : level -= 1
+        when FOR_LOOP_START_MATCHER
           level += 1
         end
       end
@@ -100,8 +101,8 @@ module Word
       raise e.class, [context_info, e.message].join(": ")
     end
 
-    def there_are_for_loop_placeholders(placeholders)
-      placeholders.any?{|p| p[:placeholder_text].match(FOR_LOOP_START_MATCHER) }
+    def there_are_for_loop_placeholders
+      @placeholders.lazy.any? { |p| p[:placeholder_text].match(FOR_LOOP_START_MATCHER) }
     end
 
   end#endclass
