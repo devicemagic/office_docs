@@ -21,7 +21,6 @@ module Word
         placeholders = []
         loop_through_placeholders_in_paragraph(paragraph, paragraph_index, with_object: with_object) do |placeholder|
           placeholders << placeholder
-          next_step = {run_index: placeholder[:end_of_placeholder][:run_index], char_index: placeholder[:end_of_placeholder][:char_index] + 1}
         end
         placeholders
       end

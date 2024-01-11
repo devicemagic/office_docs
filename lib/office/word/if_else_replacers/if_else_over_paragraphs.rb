@@ -7,7 +7,6 @@ module Word
 
       def replace_if_else(start_placeholder, end_placeholder, inbetween_placeholders, placeholders)
         self.placeholders = placeholders
-        container = start_placeholder[:paragraph_object].document
         target_nodes = get_inbetween_nodes(start_placeholder, end_placeholder)
 
         should_keep = evaluate_if(start_placeholder[:placeholder_text])

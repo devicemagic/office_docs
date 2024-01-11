@@ -22,12 +22,12 @@ module Word
         value = value.to_s
 
         coord_info = {}
-        coord_info[:lat]  =  {placeholder: "%lat", value: value.match(/lat=([\w\d\.\-]+),?/)}
-        coord_info[:long] =  {placeholder: "%long", value: value.match(/long=([\w\d\.\-]+),?/)}
-        coord_info[:alt]  =  {placeholder: "%alt", value: value.match(/alt=([\w\d\.\-]+),?/)}
-        coord_info[:h_accuracy] = {placeholder: "%hAccuracy", value: value.match(/hAccuracy=([\w\d\.\-]+),?/)}
-        coord_info[:v_accuracy] = {placeholder: "%vAccuracy", value: value.match(/vAccuracy=([\w\d\.\-]+),?/)}
-        coord_info[:timestamp]  = {placeholder: "%timestamp", value: value.match(/timestamp=([\w\d\.\-:]+),?/)}
+        coord_info[:lat]  =  {placeholder: "%lat", value: value.match(/lat=([\w\.\-]+),?/)}
+        coord_info[:long] =  {placeholder: "%long", value: value.match(/long=([\w\.\-]+),?/)}
+        coord_info[:alt]  =  {placeholder: "%alt", value: value.match(/alt=([\w\.\-]+),?/)}
+        coord_info[:h_accuracy] = {placeholder: "%hAccuracy", value: value.match(/hAccuracy=([\w\.\-]+),?/)}
+        coord_info[:v_accuracy] = {placeholder: "%vAccuracy", value: value.match(/vAccuracy=([\w\.\-]+),?/)}
+        coord_info[:timestamp]  = {placeholder: "%timestamp", value: value.match(/timestamp=([\w\.\-:]+),?/)}
 
         result = template
         coord_info.each do |name, coord_replacement|

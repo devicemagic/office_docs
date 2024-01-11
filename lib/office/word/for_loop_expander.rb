@@ -23,7 +23,6 @@ module Word
       # Get placeholders in paragraphs
       paragraphs = container.paragraphs
       self.placeholders = Word::PlaceholderFinder.get_placeholders(paragraphs, with_object: true)
-      expanded_loops = false
 
       while there_are_for_loop_placeholders(placeholders)
         i = 0
@@ -32,7 +31,6 @@ module Word
           if start_placeholder[:placeholder_text].match(FOR_LOOP_START_MATCHER)
             end_index = get_end_index(i)
             expand_loop(i, end_index)
-            expanded_loops = true
 
             i = end_index + 1
           else

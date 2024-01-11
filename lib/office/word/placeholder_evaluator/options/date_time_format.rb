@@ -15,7 +15,7 @@ module Word
       end
 
       def parse_arabic(value)
-        date_time = DateTime.parse(arabic_to_numbers(value))
+        DateTime.parse(arabic_to_numbers(value))
       end
 
       def arabic_to_numbers(text)

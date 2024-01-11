@@ -10,7 +10,7 @@ module Word
       end
 
       def apply_field_filter_to_group_fields(field_value)
-        result = restrict_fields(parsed_field_filter, field_value)
+        restrict_fields(parsed_field_filter, field_value)
       end
 
       def parsed_field_filter
