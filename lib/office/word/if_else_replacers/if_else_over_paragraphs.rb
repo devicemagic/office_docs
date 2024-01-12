@@ -33,7 +33,7 @@ module Word
         start_run = start_paragraph.replace_first_with_empty_runs(start_placeholder[:placeholder_text]).last
         end_run = end_paragraph.replace_first_with_empty_runs(end_placeholder[:placeholder_text]).first
 
-        if start_paragraph.plain_text.gsub(" ", "").length == 0
+        if start_paragraph.plain_text.blank?
           start_placeholder_paragraph = start_paragraph
           index = container.children.index(start_node)
           start_node = container.children[index + 1]
@@ -43,7 +43,7 @@ module Word
           start_node = start_paragraph.node
         end
 
-        if end_paragraph.plain_text.gsub(" ", "").length == 0
+        if end_paragraph.plain_text.blank?
           end_placeholder_paragraph = end_paragraph
 
           if start_node == end_node #nothing inbetween
