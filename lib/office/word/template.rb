@@ -42,7 +42,7 @@ module Word
     end
 
     def get_placeholders
-      Word::PlaceholderFinder.get_placeholders(main_doc.paragraphs)
+      Word::PlaceholderFinder.get_placeholders(main_doc.paragraphs, with_object: false)
     end
 
     #
@@ -67,20 +67,18 @@ module Word
     end
 
     def expand_for_loops(container, data, options = {})
-      paragraphs = container.paragraphs
       expander = Word::ForLoopExpander.new(main_doc, data, options)
       expander.expand_for_loops(container)
     end
 
     def replace_if_else(container, data, options = {})
-      paragraphs = container.paragraphs
       expander = Word::IfElseReplacer.new(main_doc, data, options)
       expander.replace_all_if_else(container)
     end
 
     def render_section(container, data, options = {})
       container.paragraphs.each_with_index do |paragraph, paragraph_index|
-        Word::PlaceholderFinder.loop_through_placeholders_in_paragraph(paragraph, paragraph_index) do |placeholder|
+        Word::PlaceholderFinder.loop_through_placeholders_in_paragraph(paragraph, paragraph_index, with_object: true) do |placeholder|
           replacer = Word::PlaceholderReplacer.new(placeholder, word_document)
           replacement = replacer.replace_in_paragraph(paragraph, data, options)
           next_step = {}

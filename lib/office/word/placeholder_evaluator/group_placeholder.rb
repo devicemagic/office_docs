@@ -20,7 +20,7 @@ module Word
         field_options.sort_by(&:importance).reverse.each do |o|
           begin
             o.apply_option
-          rescue => e
+          rescue
             raise $!, "Error applying option #{o.class.to_s.underscore.humanize} to field #{self.field_identifier}: #{$!}", $!.backtrace
           end
         end
@@ -36,39 +36,39 @@ module Word
 
     def parse_options(options_in_string_format)
       whole_options = split_options_on_commas(options_in_string_format)
-      option_objects = whole_options.map{|o| Word::GroupOption.build_option_object(o, self)}.compact
+      whole_options.map{|o| Word::GroupOption.build_option_object(o, self)}.compact
     end
 
     def create_list_for_group(form_xml_def, group_id, values, options = {}, indent = "")
-        return "" if values.blank?
-        list = []
-        values.each_index do |i|
-          values[i].each do |id, answer|
-            next if answer.blank?
-            full_id = "#{group_id}.#{id}"
-            title = form_xml_def.blank? ? full_id : form_xml_def.get_field_label(full_id)
-            should_show_labels = options[:show_labels].nil? || options[:show_labels] != false
+      return "" if values.blank?
+      list = []
+      values.each_index do |i|
+        values[i].each do |id, answer|
+          next if answer.blank?
+          full_id = "#{group_id}.#{id}"
+          title = form_xml_def.blank? ? full_id : form_xml_def.get_field_label(full_id)
+          should_show_labels = options[:show_labels].nil? || options[:show_labels] != false
 
-            case
-              when is_text_answer?(answer)
-                add_to_list(list, title, answer, indent, {on_same_line: true, should_show_labels: should_show_labels})
-              when is_image_answer?(answer)
-                answer = resize_image_answer(answer, options[:image_size][:width], options[:image_size][:height]) if options[:image_size].present?
-                add_to_list(list, title, answer, indent, {on_same_line: false, should_show_labels: should_show_labels})
-              when is_map_answer?(answer)
-                answer[0] = resize_image_answer(answer[0], options[:map_size][:width], options[:map_size][:height]) if options[:map_size].present?
-                add_to_list(list, title, answer, indent, {on_same_line: false, should_show_labels: should_show_labels})
-              when is_group_answer?(answer)
-                answer_to_add = create_list_for_group(form_xml_def, full_id, answer, options, "-\t\t\t#{indent}")
-                add_to_list(list, title, answer_to_add, indent, {on_same_line: false, should_show_labels: should_show_labels})
-              else
-                add_to_list(list, title, answer, indent, {on_same_line: false, should_show_labels: should_show_labels})
-            end
+          case
+            when is_text_answer?(answer)
+              add_to_list(list, title, answer, indent, {on_same_line: true, should_show_labels: should_show_labels})
+            when is_image_answer?(answer)
+              answer = resize_image_answer(answer, options[:image_size][:width], options[:image_size][:height]) if options[:image_size].present?
+              add_to_list(list, title, answer, indent, {on_same_line: false, should_show_labels: should_show_labels})
+            when is_map_answer?(answer)
+              answer[0] = resize_image_answer(answer[0], options[:map_size][:width], options[:map_size][:height]) if options[:map_size].present?
+              add_to_list(list, title, answer, indent, {on_same_line: false, should_show_labels: should_show_labels})
+            when is_group_answer?(answer)
+              answer_to_add = create_list_for_group(form_xml_def, full_id, answer, options, "-\t\t\t#{indent}")
+              add_to_list(list, title, answer_to_add, indent, {on_same_line: false, should_show_labels: should_show_labels})
+            else
+              add_to_list(list, title, answer, indent, {on_same_line: false, should_show_labels: should_show_labels})
           end
-          list << "" unless i == values.length - 1
         end
-        list
+        list << "" unless i == values.length - 1
       end
+      list
+    end
 
       def add_to_list(list, title, answer, indent, options = {})
         on_same_line = options[:on_same_line]

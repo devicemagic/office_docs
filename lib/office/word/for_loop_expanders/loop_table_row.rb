@@ -54,7 +54,7 @@ module Word
       end
 
       def generate_new_row(container, existing_row)
-        new_row = existing_row.clone
+        existing_row.clone
       end
 
       def get_paragraphs_from_row(container, row)

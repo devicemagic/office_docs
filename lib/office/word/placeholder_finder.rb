@@ -9,19 +9,18 @@ module Word
       #
       #
 
-      def get_placeholders(paragraphs)
+      def get_placeholders(paragraphs, with_object: true)
         placeholders = []
         paragraphs.each_with_index do |p, i|
-          placeholders += get_placeholders_from_paragraph(p, i)
+          placeholders += get_placeholders_from_paragraph(p, i, with_object: with_object)
         end
         placeholders
       end
 
-      def get_placeholders_from_paragraph(paragraph, paragraph_index)
+      def get_placeholders_from_paragraph(paragraph, paragraph_index, with_object: true)
         placeholders = []
-        loop_through_placeholders_in_paragraph(paragraph, paragraph_index) do |placeholder|
+        loop_through_placeholders_in_paragraph(paragraph, paragraph_index, with_object: with_object) do |placeholder|
           placeholders << placeholder
-          next_step = {run_index: placeholder[:end_of_placeholder][:run_index], char_index: placeholder[:end_of_placeholder][:char_index] + 1}
         end
         placeholders
       end
@@ -35,7 +34,7 @@ module Word
       #
 
 
-      def loop_through_placeholders_in_paragraph(paragraph, paragraph_index)
+      def loop_through_placeholders_in_paragraph(paragraph, paragraph_index, with_object: true)
         runs = paragraph.runs
         run_texts = runs.map(&:text).dup
 
@@ -54,7 +53,13 @@ module Word
               end_of_placeholder = get_end_of_placeholder(run_texts, i, j)
               placeholder_text = get_placeholder_text(run_texts, beginning_of_placeholder, end_of_placeholder)
 
-              placeholder = {placeholder_text: placeholder_text, paragraph_object: paragraph, paragraph_index: paragraph_index, beginning_of_placeholder: beginning_of_placeholder, end_of_placeholder: end_of_placeholder}
+              placeholder = {
+                placeholder_text: placeholder_text, 
+                paragraph_index: paragraph_index, 
+                beginning_of_placeholder: beginning_of_placeholder, 
+                end_of_placeholder: end_of_placeholder
+              }
+              placeholder[:paragraph_object] = paragraph if with_object
 
               next_step = block_given? ? yield(placeholder) : {}
               if next_step.is_a? Hash

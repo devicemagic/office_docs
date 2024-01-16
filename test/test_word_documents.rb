@@ -11,7 +11,7 @@ class WordDocumentsTest < Test::Unit::TestCase
   COMPLEX_TEST_DOC_PATH = File.join(File.dirname(__FILE__), 'content', 'complex_test.docx')
 
   def test_parse_simple_doc
-    doc = load_simple_doc
+    load_simple_doc
   end
 
   def test_replace

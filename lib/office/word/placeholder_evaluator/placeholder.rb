@@ -32,7 +32,7 @@ module Word
         field_options.sort_by(&:importance).reverse.each do |o|
           begin
             o.apply_option
-          rescue => e
+          rescue
             raise $!, "Error applying option #{o.class.to_s.underscore.humanize} to field #{self.field_identifier}: #{$!}", $!.backtrace
           end
         end
@@ -64,7 +64,7 @@ module Word
 
     def parse_options(options_in_string_format)
       whole_options = split_options_on_commas(options_in_string_format)
-      option_objects = whole_options.map{|o| Word::Option.build_option_object(o, self)}.compact
+      whole_options.map{|o| Word::Option.build_option_object(o, self)}.compact
     end
 
     def split_options_on_commas(options_in_string_format)

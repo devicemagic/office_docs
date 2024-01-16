@@ -22,8 +22,7 @@ module Word
     def expand_for_loops(container)
       # Get placeholders in paragraphs
       paragraphs = container.paragraphs
-      self.placeholders = Word::PlaceholderFinder.get_placeholders(paragraphs)
-      expanded_loops = false
+      self.placeholders = Word::PlaceholderFinder.get_placeholders(paragraphs, with_object: true)
 
       while there_are_for_loop_placeholders(placeholders)
         i = 0
@@ -32,7 +31,6 @@ module Word
           if start_placeholder[:placeholder_text].match(FOR_LOOP_START_MATCHER)
             end_index = get_end_index(i)
             expand_loop(i, end_index)
-            expanded_loops = true
 
             i = end_index + 1
           else
@@ -40,8 +38,9 @@ module Word
           end
         end
         paragraphs = resync_container(container)
-        self.placeholders = Word::PlaceholderFinder.get_placeholders(paragraphs)
+        self.placeholders = Word::PlaceholderFinder.get_placeholders(paragraphs, with_object: true)
       end
+    end
 
       # i = 0
       # While we have placeholders
@@ -50,8 +49,6 @@ module Word
         # Expand the for loop out replacing the variable placeholders
         # expand the for loops in each set generated
         # i = index_of(end_placeholder)
-
-    end
 
     def get_end_index(start_index)
       level = 0

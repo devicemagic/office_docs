@@ -30,7 +30,7 @@ module Word
 
     def resync_container(container)
       container.parse_paragraphs(container.container_node)
-      paragraphs = container.paragraphs
+      container.paragraphs
     end
   end
 end
