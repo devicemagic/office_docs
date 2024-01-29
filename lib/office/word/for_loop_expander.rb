@@ -39,7 +39,7 @@ module Word
             i += 1
           end
         end
-        paragraphs = resync_container(container)
+        paragraphs = container.paragraphs
         self.placeholders = Word::PlaceholderFinderV2.get_placeholders(paragraphs)
       end
 

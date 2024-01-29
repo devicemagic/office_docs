@@ -262,6 +262,15 @@ module Office
       node.xpath(".//w:p").each { |p| @paragraphs << Paragraph.new(p, self) }
     end
 
+    def parse_paragraph_by_id(node, paragraph_id)
+      @container_node = node
+      node.xpath(".//w:p").each_with_index do |p, i|
+        if i == paragraph_id
+          @paragraphs[paragraph_id] = Paragraph.new(p, self)
+        end
+      end
+    end
+
     def add_paragraph
       p_node = @container_node.add_child(@container_node.document.create_element("p"))
       @paragraphs << Paragraph.new(p_node, self)
