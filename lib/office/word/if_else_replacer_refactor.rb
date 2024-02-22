@@ -19,6 +19,12 @@ module Word
       self.options = options
     end
 
+
+
+
+    def resync_paragraph(container, resynced_paragraph, paragraph_index)
+      container.paragraphs[paragraph_index] = resynced_paragraph
+    end
     # Have to resync after each if/else replacement because of the way the if/else in paragraph works.
     #TODO - instead of resyncing the whole container just resync the paragraphs and placeholders affected.
     # Do it in replace_if_else - get the start and end paragraphs, uniq them
@@ -28,29 +34,27 @@ module Word
     # Sort the list
 
     def replace_all_if_else(container)
-      # Get placeholders in paragraphs
-      paragraphs = container.paragraphs
-      self.placeholders = Word::PlaceholderFinder.get_placeholders(paragraphs)
-      while there_are_if_else_placeholders?(placeholders)
-        i = 0
-        while i < placeholders.length
-          start_placeholder = placeholders[i]
-          if start_placeholder[:placeholder_text].match(IF_ELSE_START_MATCHER)
-            end_index = get_end_index(i)
-            raise "Missing endif for if placeholder: #{start_placeholder[:placeholder_text]}" if end_index.nil?
-            replace_if_else(i, end_index)
-            paragraphs = resync_container(container)
-            self.placeholders = Word::PlaceholderFinder.get_placeholders(paragraphs)
-            puts "placeholders #{self.placeholders.length}"
-            puts "containers len: #{container.paragraphs.length}"
-            break
-          else
-            i += 1
+        # Get placeholders in paragraphs
+        paragraphs = container.paragraphs
+        self.placeholders = Word::PlaceholderFinder.get_placeholders(paragraphs)
+        while there_are_if_else_placeholders?(placeholders)
+          i = 0
+          while i < placeholders.length
+            start_placeholder = placeholders[i]
+            if start_placeholder[:placeholder_text].match(IF_ELSE_START_MATCHER)
+              end_index = get_end_index(i)
+              raise "Missing endif for if placeholder: #{start_placeholder[:placeholder_text]}" if end_index.nil?
+              replace_if_else(i, end_index)
+              paragraphs = resync_container(container)
+              #self.placeholders = Word::PlaceholderFinder.get_placeholders(paragraphs)
+              break
+            else
+              i += 1
+            end
           end
         end
+  
       end
-
-    end
 
     def get_end_index(start_index)
       level = 0
@@ -70,11 +74,14 @@ module Word
       start_placeholder = placeholders[start_index]
       end_placeholder = placeholders[end_index]
       inbetween_placeholders = placeholders[(start_index+1)..(end_index-1)]
-
+      resyncd_paragraph = nil
       if start_placeholder[:paragraph_index] == end_placeholder[:paragraph_index]
         # if start and end are in the same paragraph
         looper = Word::IfElseReplacers::IfElseInParagraph.new(main_doc, data, options)
-        looper.replace_if_else(start_placeholder, end_placeholder, inbetween_placeholders)
+        # should return paragraph index #, then we use that to resync it with the document and it's placeholders
+        # maybe we can return the paragraph, it's index then we get placeholders for that paragraph and put it in our placeholders hash at the specific index? 
+        # then you wouldn't have to resync the whole container, constantly get all the placeholders 
+        resyncd_paragraph = looper.replace_if_else(start_placeholder, end_placeholder, inbetween_placeholders, placeholders)
       elsif placeholders_are_in_different_table_cells_in_same_row?(start_placeholder, end_placeholder)
         looper = Word::IfElseReplacers::IfElseTableRow.new(main_doc, data, options)
         looper.replace_if_else(start_placeholder, end_placeholder, inbetween_placeholders)
@@ -91,13 +98,17 @@ module Word
         looper = Word::IfElseReplacers::IfElseOverParagraphs.new(main_doc, data, options)
         looper.replace_if_else(start_placeholder, end_placeholder, inbetween_placeholders, placeholders)
       end
+      resyncd_paragraph
     rescue => e
       context_info = "Error in #{start_placeholder&.dig(:placeholder_text)}..#{end_placeholder&.dig(:placeholder_text)}"
       raise e.class, [context_info, e.message].join(": ")
     end
 
     def there_are_if_else_placeholders?(placeholders)
-      placeholders.any?{|p| p[:placeholder_text].match(IF_ELSE_START_MATCHER) }
+     if placeholders.empty?
+      return false
+     end
+      placeholders.any?{|p| p[:placeholder_text].match(IF_ELSE_START_MATCHER) }  
     end
 
   end#endclass
