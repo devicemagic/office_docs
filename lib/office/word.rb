@@ -261,6 +261,19 @@ module Office
       node.xpath(".//w:p").each { |p| @paragraphs << Paragraph.new(p, self) }
     end
 
+    def parse_paragraph_at_index(node, index)
+      @container_node = node
+      
+      selected_paragraph = node.xpath(".//w:p")[index]
+      
+      if selected_paragraph
+        @paragraphs.insert(index, Paragraph.new(selected_paragraph, self))
+      else
+        puts "Paragraph at index #{index} not found."
+      end
+      @paragraphs
+    end
+
     def add_paragraph
       p_node = @container_node.add_child(@container_node.document.create_element("p"))
       @paragraphs << Paragraph.new(p_node, self)
