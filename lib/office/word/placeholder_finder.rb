@@ -32,10 +32,15 @@ module Word
       def get_placeholders_from_paragraph(paragraph, paragraph_index)
         placeholders = []
         previous_run_hash = {}
-        runs = paragraph.runs
-        run_texts = runs.map(&:text)
+        runs = nil
         
-        return [] if run_texts.empty? || run_texts.nil?
+        if (paragraph.respond_to?(:runs)) 
+          runs = paragraph.runs
+        end
+
+        run_texts = runs&.map(&:text) 
+        
+        return [] if run_texts.nil? || run_texts&.empty? 
         text = run_texts.join('')
         check_brace_balance(text)
         text.scan(PLACEHOLDER_REGEX) do |match|

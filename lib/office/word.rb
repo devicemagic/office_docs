@@ -261,16 +261,15 @@ module Office
       node.xpath(".//w:p").each { |p| @paragraphs << Paragraph.new(p, self) }
     end
 
-    def parse_paragraph_at_index(node, index)
-      @container_node = node
-      
-      selected_paragraph = node.xpath(".//w:p")[index]
-      
-      if selected_paragraph
-        @paragraphs.insert(index, Paragraph.new(selected_paragraph, self))
+    def parse_paragraph_at_index(node, index, existing_paragraph)
+      @paragraphs ||= []
+    
+      if existing_paragraph
+        @paragraphs[index] = existing_paragraph.dup
       else
-        puts "Paragraph at index #{index} not found."
+        puts "Existing paragraph not provided."
       end
+    
       @paragraphs
     end
 

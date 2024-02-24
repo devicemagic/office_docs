@@ -28,7 +28,7 @@ module Word
             Word::Template.remove_node(paragraph.node)
           end
         end
-
+        paragraph
       end
 
       def replace_placeholder_with_blank_runs(placeholder)

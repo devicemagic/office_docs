@@ -22,9 +22,6 @@ module Word
 
 
 
-    def resync_paragraph(container, resynced_paragraph, paragraph_index)
-      container.paragraphs[paragraph_index] = resynced_paragraph
-    end
     # Have to resync after each if/else replacement because of the way the if/else in paragraph works.
     #TODO - instead of resyncing the whole container just resync the paragraphs and placeholders affected.
     # Do it in replace_if_else - get the start and end paragraphs, uniq them
@@ -44,9 +41,9 @@ module Word
             if start_placeholder[:placeholder_text].match(IF_ELSE_START_MATCHER)
               end_index = get_end_index(i)
               raise "Missing endif for if placeholder: #{start_placeholder[:placeholder_text]}" if end_index.nil?
-              replace_if_else(i, end_index)
-              paragraphs = resync_container(container)
-              #self.placeholders = Word::PlaceholderFinder.get_placeholders(paragraphs)
+              paragraph = replace_if_else(i, end_index)
+              paragraphs = resync_paragraph(container, i)
+              self.placeholders = Word::PlaceholderFinder.get_placeholders(paragraphs)
               break
             else
               i += 1

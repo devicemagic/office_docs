@@ -38,9 +38,15 @@ module Word
           if start_placeholder[:placeholder_text].match(IF_ELSE_START_MATCHER)
             end_index = get_end_index(i)
             raise "Missing endif for if placeholder: #{start_placeholder[:placeholder_text]}" if end_index.nil?
-            replace_if_else(i, end_index)
-            #paragraphs = resync_container(container)
-            #self.placeholders = Word::PlaceholderFinder.get_placeholders(paragraphs)
+            paragraph = replace_if_else(i, end_index)
+
+            if !paragraph.nil?
+              paragraphs = resync_paragraph(container, i, paragraph)
+            else
+              paragraphs = resync_container(container)
+            end
+            
+            self.placeholders = Word::PlaceholderFinder.get_placeholders(paragraphs)
             puts "placeholders #{self.placeholders.length}"
             puts "containers len: #{container.paragraphs.length}"
             break
@@ -70,11 +76,12 @@ module Word
       start_placeholder = placeholders[start_index]
       end_placeholder = placeholders[end_index]
       inbetween_placeholders = placeholders[(start_index+1)..(end_index-1)]
+      thing = nil
 
       if start_placeholder[:paragraph_index] == end_placeholder[:paragraph_index]
         # if start and end are in the same paragraph
         looper = Word::IfElseReplacers::IfElseInParagraph.new(main_doc, data, options)
-        looper.replace_if_else(start_placeholder, end_placeholder, inbetween_placeholders)
+        thing = looper.replace_if_else(start_placeholder, end_placeholder, inbetween_placeholders)
       elsif placeholders_are_in_different_table_cells_in_same_row?(start_placeholder, end_placeholder)
         looper = Word::IfElseReplacers::IfElseTableRow.new(main_doc, data, options)
         looper.replace_if_else(start_placeholder, end_placeholder, inbetween_placeholders)
@@ -91,6 +98,7 @@ module Word
         looper = Word::IfElseReplacers::IfElseOverParagraphs.new(main_doc, data, options)
         looper.replace_if_else(start_placeholder, end_placeholder, inbetween_placeholders, placeholders)
       end
+      thing
     rescue => e
       context_info = "Error in #{start_placeholder&.dig(:placeholder_text)}..#{end_placeholder&.dig(:placeholder_text)}"
       raise e.class, [context_info, e.message].join(": ")
