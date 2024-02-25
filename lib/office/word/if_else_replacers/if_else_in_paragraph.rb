@@ -7,7 +7,7 @@ module Word
       # Break runs on start + end
       # loop runs inbetween
 
-      def replace_if_else(start_placeholder, end_placeholder, inbetween_placeholders)
+      def replace_if_else(start_placeholder, end_placeholder, inbetween_placeholders, all_placeholders)
         paragraph = start_placeholder[:paragraph_object]
 
         end_run = replace_placeholder_with_blank_runs(end_placeholder)
@@ -27,8 +27,12 @@ module Word
           if paragraph.is_blank?
             Word::Template.remove_node(paragraph.node)
           end
+          # all_placeholders.reject! { |placeholder| placeholder[:paragraph_index] == start_placeholder[:paragraph_index] }
+         return {paragraph: paragraph, remove: false}  
         end
-        paragraph
+        # all_placeholders.reject! { |placeholder| placeholder[:paragraph_index] == start_dup[:paragraph_index] && placeholder[:placeholder_text] == start_dup[:placeholder_text] && placeholder[:paragraph_object] == start_dup[:paragraph_object]}
+        # all_placeholders.reject! { |placeholder| placeholder[:paragraph_index] == end_dup[:paragraph_index] && placeholder[:placeholder_text] == end_dup[:placeholder_text]  }
+       return  {paragraph: paragraph, remove: false}  
       end
 
       def replace_placeholder_with_blank_runs(placeholder)

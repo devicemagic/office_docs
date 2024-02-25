@@ -261,10 +261,14 @@ module Office
       node.xpath(".//w:p").each { |p| @paragraphs << Paragraph.new(p, self) }
     end
 
-    def parse_paragraph_at_index(node, index, existing_paragraph)
+    def parse_paragraph_at_index(node, index, existing_paragraph, remove_paragraph = false)
       @paragraphs ||= []
+
+      if remove_paragraph
+        remove_paragraph(@paragraphs[index]) if @paragraphs[index]
+      end
     
-      if existing_paragraph
+      if existing_paragraph && !remove_paragraph
         @paragraphs[index] = existing_paragraph.dup
       else
         puts "Existing paragraph not provided."
