@@ -17,12 +17,7 @@ module TemplateTestHelper
 
       correct = Office::WordDocument.new(path_to_correct_render)
       our_render = Office::WordDocument.new(filename)
-
-      if output
-        File.write('correct-solar_pv.xml', correct.main_doc.part.xml)
-        File.write('our-solar_pv.xml', our_render.main_doc.part.xml)
-      end
-
+      
       assert docs_are_equivalent?(correct, our_render)
     end
   end

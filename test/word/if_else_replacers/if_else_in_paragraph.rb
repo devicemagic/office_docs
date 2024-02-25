@@ -31,9 +31,6 @@ module IfElseInParagraphTest
       correct = Office::WordDocument.new(File.join(File.dirname(__FILE__), '..', '..', 'content', 'template', 'if_else', 'correct_render', 'test_if_in_same_paragraph.docx'))
       our_render = Office::WordDocument.new(filename)
 
-      File.write('correct-1.xml', correct.main_doc.part.xml)
-      File.write('our_render-1.xml', our_render.main_doc.part.xml)
-
       assert docs_are_equivalent?(correct, our_render)
     end
   end
@@ -84,9 +81,6 @@ module IfElseInParagraphTest
 
       correct = Office::WordDocument.new(File.join(File.dirname(__FILE__), '..', '..', 'content', 'template', 'if_else', 'correct_render', 'nested_if_else_in_same_paragraph.docx'))
       our_render = Office::WordDocument.new(filename)
-
-      File.write('correct-2.xml', correct.main_doc.part.xml)
-      File.write('our_render-2.xml', our_render.main_doc.part.xml)
       assert docs_are_equivalent?(correct, our_render)
     end
   end
