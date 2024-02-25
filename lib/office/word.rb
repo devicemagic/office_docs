@@ -265,7 +265,8 @@ module Office
       @paragraphs ||= []
 
       if remove_paragraph
-        remove_paragraph(@paragraphs[index]) if @paragraphs[index]
+        #todo - do we need to do this on removal? do things automatically get re-indexed?
+        parse_paragraphs(node)
         return @paragraphs
       end
     

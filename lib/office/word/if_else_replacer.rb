@@ -40,17 +40,15 @@ module Word
             end_index = get_end_index(i)
             raise "Missing endif for if placeholder: #{start_placeholder[:placeholder_text]}" if end_index.nil?
             paragraph_and_placeholders = replace_if_else(i, end_index, original)
-
             if !paragraph_and_placeholders[:paragraph].nil?
-              puts "new method"
               paragraphs = resync_paragraph(container, i, paragraph_and_placeholders[:paragraph], paragraph_and_placeholders[:remove])
               self.placeholders = paragraph_and_placeholders[:placeholders]
-              p1 = paragraph_and_placeholders[:placeholders]
              else
-              puts "old method"
               paragraphs = resync_container(container)
               self.placeholders = Word::PlaceholderFinder.get_placeholders(paragraphs)
             end
+            puts "placeholders #{self.placeholders.length}"
+            puts "containers len: #{container.paragraphs.length}"
             break
           else
             i += 1

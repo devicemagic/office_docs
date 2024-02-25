@@ -20,6 +20,8 @@ module Word
         inbetween_runs = paragraph.runs[from_run..to_run]
         should_keep = evaluate_if(start_placeholder[:placeholder_text])
 
+        new_placeholders = []
+
         if !should_keep
           inbetween_runs.each do |run|
             paragraph.remove_run(run)
@@ -29,17 +31,25 @@ module Word
             Word::Template.remove_node(paragraph.node)
           end
 
-          # remove all placeholders for the paragraph 
-          all_placeholders.reject! { |placeholder| placeholder[:paragraph_index] == end_placeholder[:paragraph_index] || placeholder[:paragraph_index] == start_placeholder[:paragraph_index]}
+          # remove all placeholders for the paragraph, since start and end are the same paragraph use the start index 
+          all_placeholders.reject! { |placeholder| placeholder[:paragraph_index] == start_placeholder[:paragraph_index]}
 
+        
           #reget all the placeholders for the paragraph
-          new_placeholders = Word::PlaceholderFinder.get_placeholders_from_paragraph(paragraph, start_placeholder[:paragraph_index])
- 
+
+          if !paragraph.is_blank?
+            new_placeholders = Word::PlaceholderFinder.get_placeholders_from_paragraph(paragraph, start_placeholder[:paragraph_index])
+          else
+            re_index_placeholder_indexes(all_placeholders, start_placeholder[:paragraph_index])
+          end
+
           all_placeholders.concat(new_placeholders)
-         
           sort_placeholders(all_placeholders)
 
-         return { paragraph: paragraph, remove: false, placeholders: all_placeholders }  
+          puts "total size of placeholders after removing paragraph: #{all_placeholders.length}"
+
+
+         return { paragraph: paragraph, remove: paragraph.is_blank?, placeholders: all_placeholders }  
         end
 
           puts "here"
@@ -59,11 +69,19 @@ module Word
         return  { paragraph: paragraph, remove: false, placeholders: all_placeholders }  
       end
 
+      def re_index_placeholder_indexes(placeholders, paragraph_index_removed)
+        placeholders.map do |placeholder|
+          if placeholder[:paragraph_index] > paragraph_index_removed
+            placeholder[:paragraph_index] -= 1
+          end
+          placeholder
+        end
+      end
 
       def sort_placeholders(placeholders)
         placeholders.sort! do |a, b|
           # Compare paragraph_index
-          compare_paragraph = a["paragraph_index"] <=> b["paragraph_index"]
+          compare_paragraph = a[:paragraph_index] <=> b[:paragraph_index]
           return compare_paragraph unless compare_paragraph.zero?
         
           # If paragraph_index is equal, compare run_index within beginning_of_placeholder
