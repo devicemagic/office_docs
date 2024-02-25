@@ -23,10 +23,10 @@
 <w:t/>
 </w:r>
 <w:proofErr w:type="spellEnd"/>
+<w:r/>
 <w:r w:rsidRPr="001B3E96">
 <w:t/>
 </w:r>
-<w:r/>
 <w:proofErr w:type="spellStart"/>
 <w:r w:rsidRPr="001B3E96">
 <w:t/>
@@ -79,18 +79,15 @@
 <w:t/>
 </w:r>
 <w:proofErr w:type="spellEnd"/>
-<w:r/>
 <w:r w:rsidRPr="001B3E96">
 <w:t/>
 </w:r>
+<w:r/>
 <w:proofErr w:type="spellStart"/>
 <w:r w:rsidRPr="001B3E96">
 <w:t/>
 </w:r>
 <w:proofErr w:type="spellEnd"/>
-<w:r w:rsidRPr="001B3E96">
-<w:t/>
-</w:r>
 <w:r/>
 <w:proofErr w:type="spellStart"/>
 <w:proofErr w:type="spellEnd"/>

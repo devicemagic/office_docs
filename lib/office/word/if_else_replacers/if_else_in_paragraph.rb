@@ -9,6 +9,7 @@ module Word
 
       def replace_if_else(start_placeholder, end_placeholder, inbetween_placeholders, all_placeholders)
         paragraph = start_placeholder[:paragraph_object]
+        puts "total size of placeholders before any operations: #{all_placeholders.length}"
 
         end_run = replace_placeholder_with_blank_runs(end_placeholder)
         start_run = replace_placeholder_with_blank_runs(start_placeholder)
@@ -26,38 +27,52 @@ module Word
 
           if paragraph.is_blank?
             Word::Template.remove_node(paragraph.node)
-            # reject all placeholders with the same paragraph index as the start_placeholder
-            all_placeholders.reject! { |placeholder| placeholder[:paragraph_index] == start_placeholder[:paragraph_index] || placeholder[:paragraph_index] == end_placeholder[:paragraph_index]}
           end
 
-          # remove the start and end placeholders only 
-          puts "all_placeholders length before reject start and end: #{all_placeholders.length}"
-          all_placeholders.reject! { |placeholder| placeholder[:paragraph_index] == start_placeholder[:paragraph_index] && start_placeholder[:placeholder_text] ==  placeholder[:placeholder_text] && start_placeholder[:paragraph_index] && placeholder[:beginning_of_placeholder] == start_placeholder[:beginning_of_placeholder] && placeholder[:end_of_placeholder] == start_placeholder[:end_of_placeholder]}
-          puts "all_placeholders length after reject start and end: #{all_placeholders.length}"
-          all_placeholders.reject! { |placeholder| placeholder[:paragraph_index] == end_placeholder[:paragraph_index] && end_placeholder[:placeholder_text] ==  placeholder[:placeholder_text]  && end_placeholder[:paragraph_index] && placeholder[:beginning_of_placeholder] == end_placeholder[:beginning_of_placeholder] && placeholder[:end_of_placeholder] == end_placeholder[:end_of_placeholder]}
-          puts "all_placeholders length after reject start and end: #{all_placeholders.length}"
-       
+          # remove all placeholders for the paragraph 
+          all_placeholders.reject! { |placeholder| placeholder[:paragraph_index] == end_placeholder[:paragraph_index] || placeholder[:paragraph_index] == start_placeholder[:paragraph_index]}
+
           #reget all the placeholders for the paragraph
-          #new_placeholders = Word::PlaceholderFinder.get_placeholders_from_paragraph(paragraph, start_placeholder[:paragraph_index])
-          #all_placeholders.concat(new_placeholders)
-          puts "all_placeholders length after concat new_placeholders: #{all_placeholders.length}"
-          all_placeholders.sort_by! { |placeholder| placeholder[:paragraph_index] }
+          new_placeholders = Word::PlaceholderFinder.get_placeholders_from_paragraph(paragraph, start_placeholder[:paragraph_index])
+ 
+          all_placeholders.concat(new_placeholders)
+         
+          sort_placeholders(all_placeholders)
+
          return { paragraph: paragraph, remove: false, placeholders: all_placeholders }  
         end
 
-        all_placeholders.reject! { |placeholder| placeholder[:paragraph_index] == end_placeholder[:paragraph_index]}
-        all_placeholders.reject! { |placeholder| placeholder[:paragraph_index] == start_placeholder[:paragraph_index]}
+          puts "here"
+          all_placeholders.reject! { |placeholder| placeholder[:paragraph_index] == end_placeholder[:paragraph_index]}
+          all_placeholders.reject! { |placeholder| placeholder[:paragraph_index] == start_placeholder[:paragraph_index]}
 
-        # reget all the placeholders for the paragraph
-        new_placeholders = Word::PlaceholderFinder.get_placeholders_from_paragraph(paragraph, start_placeholder[:paragraph_index])
 
-        # add the new placeholders to the all_placeholders array
-        all_placeholders.concat(new_placeholders)
+         # reget all the placeholders for the paragraph
+         new_placeholders = Word::PlaceholderFinder.get_placeholders_from_paragraph(paragraph, start_placeholder[:paragraph_index])
 
-        # sort the all_placeholders array by paragraph index
-        all_placeholders.sort_by! { |placeholder| placeholder[:paragraph_index] }
+        # # add the new placeholders to the all_placeholders array
+         all_placeholders.concat(new_placeholders)
+
+        # # sort the all_placeholders array by paragraph index
+        sort_placeholders(all_placeholders)
 
         return  { paragraph: paragraph, remove: false, placeholders: all_placeholders }  
+      end
+
+
+      def sort_placeholders(placeholders)
+        placeholders.sort! do |a, b|
+          # Compare paragraph_index
+          compare_paragraph = a["paragraph_index"] <=> b["paragraph_index"]
+          return compare_paragraph unless compare_paragraph.zero?
+        
+          # If paragraph_index is equal, compare run_index within beginning_of_placeholder
+          compare_run = a[:beginning_of_placeholder][:run_index] <=> b[:beginning_of_placeholder][:run_index]
+          return compare_run unless compare_run.zero?
+        
+          # If run_index is equal, compare char_index within beginning_of_placeholder
+          a[:beginning_of_placeholder][:char_index] <=> b[:beginning_of_placeholder][:char_index]
+        end
       end
 
       def replace_placeholder_with_blank_runs(placeholder)
