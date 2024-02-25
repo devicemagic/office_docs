@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<w:document xmlns:wpc="http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas" xmlns:mo="http://schemas.microsoft.com/office/mac/office/2008/main" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:mv="urn:schemas-microsoft-com:mac:vml" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:wp14="http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" xmlns:w10="urn:schemas-microsoft-com:office:word" xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml" xmlns:wpg="http://schemas.microsoft.com/office/word/2010/wordprocessingGroup" xmlns:wpi="http://schemas.microsoft.com/office/word/2010/wordprocessingInk" xmlns:wne="http://schemas.microsoft.com/office/word/2006/wordml" xmlns:wps="http://schemas.microsoft.com/office/word/2010/wordprocessingShape" mc:Ignorable="w14 wp14">
+<w:body>
+<w:p w14:paraId="5478E152" w14:textId="6A412095" w:rsidR="00B07D01" w:rsidRDefault="00316E9C" w:rsidP="00B07D01">
+<w:pPr>
+<w:pStyle w:val="Heading1"/>
+</w:pPr>
+<w:r>
+<w:t xml:space="preserve">Test </w:t>
+</w:r>
+<w:r w:rsidR="009524A8">
+<w:t>If in Same Paragraph</w:t>
+</w:r>
+</w:p>
+<w:p w14:paraId="3C68E32D" w14:textId="77777777" w:rsidR="00B07D01" w:rsidRDefault="00B07D01" w:rsidP="00B07D01"/>
+<w:p w14:paraId="0D82FAB6" w14:textId="2B0A2155" w:rsidR="009524A8" w:rsidRDefault="009524A8" w:rsidP="009524A8">
+<w:r>
+<w:t>inbetween</w:t>
+</w:r>
+</w:p>
+<w:p w14:paraId="5F8BDD8D" w14:textId="2B346169" w:rsidR="009524A8" w:rsidRDefault="009524A8" w:rsidP="00B07D01">
+<w:r>
+<w:t>inbetween2</w:t>
+</w:r>
+</w:p>
+<w:p w14:paraId="50CE4054" w14:textId="2E878D11" w:rsidR="007911BD" w:rsidRDefault="009524A8" w:rsidP="007911BD">
+<w:r/>
+<w:r>
+<w:t xml:space="preserve">B is not pie!</w:t>
+</w:r>
+<w:r/>
+</w:p>
+<w:p w14:paraId="216C4A6A" w14:textId="526F92F5" w:rsidR="005F01C0" w:rsidRDefault="005F01C0" w:rsidP="007911BD">
+<w:r>
+<w:t>inbetween3</w:t>
+</w:r>
+</w:p>
+<w:p w14:paraId="601C3C84" w14:textId="33592F76" w:rsidR="005F01C0" w:rsidRDefault="00EA288A" w:rsidP="005F01C0">
+<w:r/>
+<w:r>
+<w:t/>
+</w:r>
+<w:bookmarkStart w:id="0" w:name="_GoBack"/>
+<w:bookmarkEnd w:id="0"/>
+<w:r w:rsidR="005F01C0">
+<w:t xml:space="preserve">C is LOL!!!!</w:t>
+</w:r>
+<w:r/>
+</w:p>
+<w:p w14:paraId="5EF7B65F" w14:textId="77777777" w:rsidR="005F01C0" w:rsidRDefault="005F01C0" w:rsidP="007911BD"/>
+<w:p w14:paraId="1386C0D8" w14:textId="77777777" w:rsidR="007911BD" w:rsidRDefault="007911BD" w:rsidP="007911BD"/>
+<w:p w14:paraId="33A0C848" w14:textId="77777777" w:rsidR="007911BD" w:rsidRDefault="007911BD" w:rsidP="007911BD"/>
+<w:p w14:paraId="3A303345" w14:textId="77777777" w:rsidR="007911BD" w:rsidRDefault="007911BD" w:rsidP="007911BD"/>
+<w:p w14:paraId="662BB1FC" w14:textId="77777777" w:rsidR="007911BD" w:rsidRDefault="007911BD" w:rsidP="007911BD"/>
+<w:p w14:paraId="3557FB2C" w14:textId="77777777" w:rsidR="007911BD" w:rsidRDefault="007911BD" w:rsidP="007911BD"/>
+<w:p w14:paraId="0B4B8CAC" w14:textId="77777777" w:rsidR="007911BD" w:rsidRDefault="007911BD" w:rsidP="007911BD"/>
+<w:p w14:paraId="6C60531C" w14:textId="77777777" w:rsidR="007911BD" w:rsidRDefault="007911BD" w:rsidP="007911BD"/>
+<w:p w14:paraId="466154F4" w14:textId="77777777" w:rsidR="007911BD" w:rsidRDefault="007911BD" w:rsidP="007911BD"/>
+<w:p w14:paraId="1F04F12E" w14:textId="77777777" w:rsidR="007911BD" w:rsidRDefault="007911BD" w:rsidP="007911BD"/>
+<w:p w14:paraId="1BA531B4" w14:textId="77777777" w:rsidR="007911BD" w:rsidRDefault="007911BD" w:rsidP="007911BD"/>
+<w:p w14:paraId="2B707E83" w14:textId="77777777" w:rsidR="007911BD" w:rsidRDefault="007911BD" w:rsidP="007911BD"/>
+<w:p w14:paraId="15B2434E" w14:textId="77777777" w:rsidR="007911BD" w:rsidRDefault="007911BD" w:rsidP="007911BD"/>
+<w:p w14:paraId="72CCC766" w14:textId="77777777" w:rsidR="007911BD" w:rsidRDefault="007911BD" w:rsidP="007911BD"/>
+<w:p w14:paraId="350A7982" w14:textId="77777777" w:rsidR="007911BD" w:rsidRDefault="007911BD" w:rsidP="007911BD"/>
+<w:p w14:paraId="6DE447F7" w14:textId="77777777" w:rsidR="007911BD" w:rsidRDefault="007911BD" w:rsidP="007911BD"/>
+<w:p w14:paraId="69A9C377" w14:textId="77777777" w:rsidR="007911BD" w:rsidRDefault="007911BD" w:rsidP="007911BD"/>
+<w:p w14:paraId="30BCAC6F" w14:textId="77777777" w:rsidR="007911BD" w:rsidRDefault="007911BD" w:rsidP="007911BD"/>
+<w:p w14:paraId="512FEFFF" w14:textId="77777777" w:rsidR="007911BD" w:rsidRDefault="007911BD" w:rsidP="007911BD"/>
+<w:p w14:paraId="3716E307" w14:textId="77777777" w:rsidR="007911BD" w:rsidRDefault="007911BD" w:rsidP="007911BD"/>
+<w:p w14:paraId="041051C6" w14:textId="77777777" w:rsidR="007911BD" w:rsidRDefault="007911BD" w:rsidP="007911BD"/>
+<w:p w14:paraId="011DBE53" w14:textId="77777777" w:rsidR="007911BD" w:rsidRDefault="007911BD" w:rsidP="007911BD"/>
+<w:p w14:paraId="6D1B1BC4" w14:textId="77777777" w:rsidR="007911BD" w:rsidRDefault="007911BD" w:rsidP="007911BD"/>
+<w:p w14:paraId="44050F16" w14:textId="77777777" w:rsidR="00B07D01" w:rsidRDefault="00B07D01" w:rsidP="00B07D01"/>
+<w:p w14:paraId="11209F21" w14:textId="77777777" w:rsidR="00316A2E" w:rsidRDefault="00316A2E"/>
+<w:sectPr w:rsidR="00316A2E" w:rsidSect="00AE36FF">
+<w:pgSz w:w="11900" w:h="16840"/>
+<w:pgMar w:top="1440" w:right="1800" w:bottom="1440" w:left="1800" w:header="708" w:footer="708" w:gutter="0"/>
+<w:cols w:space="708"/>
+<w:docGrid w:linePitch="360"/>
+</w:sectPr>
+</w:body>
+</w:document>
