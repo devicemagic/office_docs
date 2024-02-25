@@ -266,10 +266,11 @@ module Office
 
       if remove_paragraph
         remove_paragraph(@paragraphs[index]) if @paragraphs[index]
+        return @paragraphs
       end
     
       if existing_paragraph && !remove_paragraph
-        @paragraphs[index] = existing_paragraph.dup
+        @paragraphs[index] = existing_paragraph
       else
         puts "Existing paragraph not provided."
       end

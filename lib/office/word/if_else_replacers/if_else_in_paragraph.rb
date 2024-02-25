@@ -26,20 +26,27 @@ module Word
 
           if paragraph.is_blank?
             Word::Template.remove_node(paragraph.node)
+            # reject all placeholders with the same paragraph index as the start_placeholder
+            all_placeholders.reject! { |placeholder| placeholder[:paragraph_index] == start_placeholder[:paragraph_index] || placeholder[:paragraph_index] == end_placeholder[:paragraph_index]}
           end
-          # reject all placeholders with the same paragraph index as the start_placeholder
-          all_placeholders.reject! { |placeholder| placeholder[:paragraph_index] == start_placeholder[:paragraph_index] || placeholder[:paragraph_index] == end_placeholder[:paragraph_index]}
 
+          # remove the start and end placeholders only 
+          puts "all_placeholders length before reject start and end: #{all_placeholders.length}"
+          all_placeholders.reject! { |placeholder| placeholder[:paragraph_index] == start_placeholder[:paragraph_index] && start_placeholder[:placeholder_text] ==  placeholder[:placeholder_text] && start_placeholder[:paragraph_index] && placeholder[:beginning_of_placeholder] == start_placeholder[:beginning_of_placeholder] && placeholder[:end_of_placeholder] == start_placeholder[:end_of_placeholder]}
+          puts "all_placeholders length after reject start and end: #{all_placeholders.length}"
+          all_placeholders.reject! { |placeholder| placeholder[:paragraph_index] == end_placeholder[:paragraph_index] && end_placeholder[:placeholder_text] ==  placeholder[:placeholder_text]  && end_placeholder[:paragraph_index] && placeholder[:beginning_of_placeholder] == end_placeholder[:beginning_of_placeholder] && placeholder[:end_of_placeholder] == end_placeholder[:end_of_placeholder]}
+          puts "all_placeholders length after reject start and end: #{all_placeholders.length}"
+       
           #reget all the placeholders for the paragraph
-          new_placeholders = Word::PlaceholderFinder.get_placeholders_from_paragraph(paragraph, start_placeholder[:paragraph_index])
-          all_placeholders.concat(new_placeholders)
+          #new_placeholders = Word::PlaceholderFinder.get_placeholders_from_paragraph(paragraph, start_placeholder[:paragraph_index])
+          #all_placeholders.concat(new_placeholders)
+          puts "all_placeholders length after concat new_placeholders: #{all_placeholders.length}"
           all_placeholders.sort_by! { |placeholder| placeholder[:paragraph_index] }
          return { paragraph: paragraph, remove: false, placeholders: all_placeholders }  
         end
 
-        # # reject the if placeholder we just evaluated / replaced
-         all_placeholders.reject! { |placeholder| placeholder[:paragraph_index] == start_placeholder[:paragraph_index]}
-        # all_placeholders.reject! { |placeholder| placeholder[:paragraph_index] == end_placeholder[:paragraph_index] && placeholder[:beginning_of_placeholder] == end_placeholder[:beginning_of_placeholder] && placeholder[:end_of_placeholder] == end_placeholder[:end_of_placeholder]}
+        all_placeholders.reject! { |placeholder| placeholder[:paragraph_index] == end_placeholder[:paragraph_index]}
+        all_placeholders.reject! { |placeholder| placeholder[:paragraph_index] == start_placeholder[:paragraph_index]}
 
         # reget all the placeholders for the paragraph
         new_placeholders = Word::PlaceholderFinder.get_placeholders_from_paragraph(paragraph, start_placeholder[:paragraph_index])

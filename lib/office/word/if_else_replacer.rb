@@ -38,14 +38,13 @@ module Word
           start_placeholder = placeholders[i]
           if start_placeholder[:placeholder_text].match(IF_ELSE_START_MATCHER)
             end_index = get_end_index(i)
-
-            #binding.pry if end_index.nil?
             raise "Missing endif for if placeholder: #{start_placeholder[:placeholder_text]}" if end_index.nil?
             paragraph_and_placeholders = replace_if_else(i, end_index)
 
             if !paragraph_and_placeholders[:paragraph].nil?
               puts "new method"
               paragraphs = resync_paragraph(container, i, paragraph_and_placeholders[:paragraph], paragraph_and_placeholders[:remove] )
+              #paragraphs = resync_container(container)
               self.placeholders = paragraph_and_placeholders[:placeholders]
             else
               puts "old method"
@@ -106,6 +105,7 @@ module Word
       end
       thing
     rescue => e
+      #binding.pry
       context_info = "Error in #{start_placeholder&.dig(:placeholder_text)}..#{end_placeholder&.dig(:placeholder_text)}"
       raise e.class, [context_info, e.message].join(": ")
     end
