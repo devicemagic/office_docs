@@ -27,12 +27,20 @@ module Word
           if paragraph.is_blank?
             Word::Template.remove_node(paragraph.node)
           end
-          # all_placeholders.reject! { |placeholder| placeholder[:paragraph_index] == start_placeholder[:paragraph_index] }
-         return {paragraph: paragraph, remove: false}  
+          # reject all placeholders with the same paragraph index as the start_placeholder
+          all_placeholders.reject! { |placeholder| placeholder[:paragraph_index] == start_placeholder[:paragraph_index] || placeholder[:paragraph_index] == end_placeholder[:paragraph_index]}
+
+          #reget all the placeholders for the paragraph
+          new_placeholders = Word::PlaceholderFinder.get_placeholders_from_paragraph(paragraph, start_placeholder[:paragraph_index])
+          all_placeholders.sort_by! { |placeholder| placeholder[:paragraph_index] }
+         return {paragraph: paragraph, remove: false, placeholders: all_placeholders}  
         end
-        # all_placeholders.reject! { |placeholder| placeholder[:paragraph_index] == start_dup[:paragraph_index] && placeholder[:placeholder_text] == start_dup[:placeholder_text] && placeholder[:paragraph_object] == start_dup[:paragraph_object]}
-        # all_placeholders.reject! { |placeholder| placeholder[:paragraph_index] == end_dup[:paragraph_index] && placeholder[:placeholder_text] == end_dup[:placeholder_text]  }
-       return  {paragraph: paragraph, remove: false}  
+        
+        # reject all placeholders with the same paragraph index as the start_placeholder
+        all_placeholders.reject! { |placeholder| placeholder[:paragraph_index] == start_placeholder[:paragraph_index] || placeholder[:paragraph_index] == end_placeholder[:paragraph_index]}
+        new_placeholders = Word::PlaceholderFinder.get_placeholders_from_paragraph(paragraph, start_placeholder[:paragraph_index])
+        all_placeholders.sort_by! { |placeholder| placeholder[:paragraph_index] }
+        return  {paragraph: paragraph, remove: false, placeholders: all_placeholders}  
       end
 
       def replace_placeholder_with_blank_runs(placeholder)

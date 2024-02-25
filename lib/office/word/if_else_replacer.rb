@@ -46,7 +46,7 @@ module Word
             if !paragraph_and_placeholders[:paragraph].nil?
               puts "new method"
               paragraphs = resync_paragraph(container, i, paragraph_and_placeholders[:paragraph], paragraph_and_placeholders[:remove] )
-              self.placeholders = Word::PlaceholderFinder.get_placeholders(paragraphs)
+              self.placeholders = paragraph_and_placeholders[:placeholders]
             else
               puts "old method"
               paragraphs = resync_container(container)
