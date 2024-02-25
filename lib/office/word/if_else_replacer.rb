@@ -39,7 +39,7 @@ module Word
           if start_placeholder[:placeholder_text].match(IF_ELSE_START_MATCHER)
             end_index = get_end_index(i)
 
-            binding.pry if end_index.nil?
+            #binding.pry if end_index.nil?
             raise "Missing endif for if placeholder: #{start_placeholder[:placeholder_text]}" if end_index.nil?
             paragraph_and_placeholders = replace_if_else(i, end_index)
 
