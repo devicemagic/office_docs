@@ -261,16 +261,38 @@ module Office
       node.xpath(".//w:p").each { |p| @paragraphs << Paragraph.new(p, self) }
     end
 
-    def parse_paragraph_at_index(node, index, existing_paragraph, remove_paragraph = false)
+    def parse_paragraphs_at_index(node, paragraphs, remove_paragraphs = [] )
+      @paragraphs ||= []
+      parse_paragraphs(node)
+
+      # if paragraphs.length > 0
+      #   paragraphs.each do |paragraph|
+      #     @paragraphs[paragraph[:index]] = paragraph[:paragraph]
+      #   end
+      # end
+    
+    #todo: do we handle removal? do we need to re-index? removal is handled in if_else_over_paragraphs.rb
+      # if remove_paragraphs.length > 0
+      #   remove_paragraphs.each do |index_to_remove|
+      #     remove_paragraph(@paragraphs[index_to_remove]) if @paragraphs[index_to_remove]
+      #   end
+      #   #todo - do we need to do this on removal? do things automatically get re-indexed?
+      #   parse_paragraphs(node)
+      # end
+
+      @paragraphs
+    end
+
+    def parse_paragraph_at_index(node, index, existing_paragraph, remove_paragraph_bool = false)
       @paragraphs ||= []
 
-      if remove_paragraph
+      if remove_paragraph_bool
         #todo - do we need to do this on removal? do things automatically get re-indexed?
         parse_paragraphs(node)
         return @paragraphs
       end
     
-      if existing_paragraph && !remove_paragraph
+      if existing_paragraph && !remove_paragraph_bool
         @paragraphs[index] = existing_paragraph
       else
         puts "Existing paragraph not provided."

@@ -42,7 +42,11 @@ module Word
             if !paragraph_and_placeholders[:paragraph].nil?
               paragraphs = resync_paragraph(container, i, paragraph_and_placeholders[:paragraph], paragraph_and_placeholders[:remove])
               self.placeholders = paragraph_and_placeholders[:placeholders]
-             else
+            elsif paragraph_and_placeholders[:paragraphs]&.length > 0 
+              paragraphs = resync_paragraphs(container, paragraph_and_placeholders[:paragraphs], paragraph_and_placeholders[:paragraphs_to_remove])
+              #todo investigate placeholders issue with if/else over paragraphs - currently broken 
+              self.placeholders =  paragraph_and_placeholders[:placeholders]
+            else
               paragraphs = resync_container(container)
               self.placeholders = Word::PlaceholderFinder.get_placeholders(paragraphs)
             end
@@ -73,7 +77,7 @@ module Word
       start_placeholder = placeholders[start_index]
       end_placeholder = placeholders[end_index]
       inbetween_placeholders = placeholders[(start_index+1)..(end_index-1)]
-      thing = {placeholders: [], paragraph: nil}
+      thing = {placeholders: [], paragraph: nil, paragraphs: [], remove: []}
 
       if start_placeholder[:paragraph_index] == end_placeholder[:paragraph_index]
         # if start and end are in the same paragraph
@@ -93,7 +97,7 @@ module Word
       else
         # else its over paragraphs
         looper = Word::IfElseReplacers::IfElseOverParagraphs.new(main_doc, data, options)
-        looper.replace_if_else(start_placeholder, end_placeholder, inbetween_placeholders, placeholders)
+        thing = looper.replace_if_else(start_placeholder, end_placeholder, inbetween_placeholders, placeholders)
       end
       thing
     rescue => e
