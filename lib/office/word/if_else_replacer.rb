@@ -43,9 +43,37 @@ module Word
               paragraphs = resync_paragraph(container, i, paragraph_and_placeholders[:paragraph], paragraph_and_placeholders[:remove])
               self.placeholders = paragraph_and_placeholders[:placeholders]
             elsif paragraph_and_placeholders[:paragraphs]&.length > 0 
+
+              #byebug
               paragraphs = resync_paragraphs(container, paragraph_and_placeholders[:paragraphs], paragraph_and_placeholders[:paragraphs_to_remove])
+              #paragraphs = resync_container(container)
+              self.placeholders = paragraph_and_placeholders[:placeholders]
+              
+              
+
+              
               #todo investigate placeholders issue with if/else over paragraphs - currently broken 
-              self.placeholders =  paragraph_and_placeholders[:placeholders]
+              #self.placeholders = 
+              
+              
+              
+              clone = Word::PlaceholderFinder.get_placeholders(paragraphs)
+
+              cloned_map = clone.map do |placeholder|
+                placeholder.dup.tap { |new_p| new_p.delete(:paragraph_object) }
+              end
+
+       
+              refactor = self.placeholders.dup
+
+              refactor_map = refactor.map do |placeholder|
+                placeholder.dup.tap { |new_p| new_p.delete(:paragraph_object) }
+              end
+
+           
+
+             byebug if refactor_map != cloned_map
+
             else
               paragraphs = resync_container(container)
               self.placeholders = Word::PlaceholderFinder.get_placeholders(paragraphs)
