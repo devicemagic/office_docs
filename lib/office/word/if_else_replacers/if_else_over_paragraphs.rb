@@ -39,6 +39,7 @@ module Word
           return { paragraphs: ['', ''], paragraphs_to_remove: self.paragraphs_to_remove, placeholders: placeholders }
         else
 
+
          
 
           placeholder_dup2 = placeholders.dup
@@ -66,8 +67,12 @@ module Word
           placeholders.reject! { |placeholder| start_placeholder[:paragraph_index] == placeholder[:paragraph_index]} 
           placeholders.reject! { |placeholder| end_placeholder[:paragraph_index] == placeholder[:paragraph_index]}
 
-          re_index_placeholders_when_start_and_end_are_removed(placeholders, start_placeholder[:paragraph_index])
-        
+          if (self.indexes_removed.length > 0 && is_inbetween_start_and_end?(self.indexes_removed[0], start_placeholder[:paragraph_index], end_placeholder[:paragraph_index]) && placeholders.length > 0) 
+            re_index_placeholders_when_start_and_end_are_removed(placeholders, start_placeholder[:paragraph_index], true)
+          else
+            re_index_placeholders_when_start_and_end_are_removed(placeholders, start_placeholder[:paragraph_index], false)
+          end
+
         
           placeholder_dup2 = placeholders.dup
 
@@ -111,10 +116,10 @@ module Word
         end
       end
 
-      def re_index_placeholders_when_start_and_end_are_removed(placeholders, removed_start_index)
+      def re_index_placeholders_when_start_and_end_are_removed(placeholders, removed_start_index, blank_inbetween_paragraph_removed = false)
         placeholders.map! do |placeholder|
           if (placeholder[:paragraph_index] > removed_start_index) 
-            placeholder[:paragraph_index] -= 1
+            blank_inbetween_paragraph_removed ? placeholder[:paragraph_index] -= 2 : placeholder[:paragraph_index] -= 1
           end
           placeholder
         end
@@ -136,6 +141,12 @@ module Word
       
         # Return the updated placeholder set
         placeholders
+      end
+
+      def is_inbetween_start_and_end?(index_to_check, start_index, end_index)
+        return false if index_to_check == start_index || index_to_check == end_index
+
+        index_to_check.between?(start_index, end_index) 
       end
       
       def re_index_placeholders(placeholders, start_index)
@@ -166,7 +177,6 @@ module Word
         if start_paragraph.plain_text.gsub(" ", "").length == 0
           start_placeholder_paragraph = start_paragraph
           index = container.children.index(start_node)
-          self.indexes_removed << index
           start_node = container.children[index + 1]
           document.remove_paragraph(start_placeholder_paragraph)
         else
