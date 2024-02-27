@@ -1,9 +1,5 @@
 require 'office/word/if_else_replacers/base'
 
-
-
-# { paragraph: [hash of paragraphs and their respective indexes], remove: [array of isBlank indexes of paragraphs] placeholders: all_placeholders }
-# { paragraphs:  [{index: 0, paragraph: xml.blob...},{index: 0, paragraph: xml.blob...}]}
 module Word
   module IfElseReplacers
     class IfElseOverParagraphs < Word::IfElseReplacers::Base
@@ -16,11 +12,17 @@ module Word
 
         container = start_placeholder[:paragraph_object].document
         target_nodes = get_inbetween_nodes(start_placeholder, end_placeholder)
-
         should_keep = evaluate_if(start_placeholder[:placeholder_text])
 
+
+        placeholder_dup2 = placeholders.dup
+
+        mapped2 = placeholder_dup2.map do |placeholder|
+          placeholder.dup.tap { |new_p| new_p.delete(:paragraph_object) }
+        end
+
         #byebug if placeholders.any? { |placeholder| placeholder[:placeholder_text].include?("Q_Q") }
-        #byebug if placeholders.any? { |placeholder| placeholder[:placeholder_text].include?("{% if !fields.c %}") }
+        #byebug if placeholders.any? { |placeholder| placeholder[:placeholder_text].include?("{% if !fields.d %}") }
         
         if !should_keep
           target_nodes.each do |node|
@@ -30,12 +32,9 @@ module Word
           # # if we shouldn't keep, let's remove all placeholders between start/end 
           range_to_remove = (start_placeholder[:paragraph_index]..end_placeholder[:paragraph_index]).to_a
           self.paragraphs_to_remove += range_to_remove
-
-          placeholders.reject! { |placeholder| range_to_remove.include?(placeholder[:paragraph_index]) }
-        
-          re_index_placeholders(placeholders, start_placeholder[:paragraph_index])
+   
+          reindex_placeholders_new(placeholders, range_to_remove)
           sort_placeholders(placeholders)
-
 
           return { paragraphs: ['', ''], paragraphs_to_remove: self.paragraphs_to_remove, placeholders: placeholders }
         else

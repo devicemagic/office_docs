@@ -47,7 +47,10 @@ module Word
               #byebug
               paragraphs = resync_paragraphs(container, paragraph_and_placeholders[:paragraphs], paragraph_and_placeholders[:paragraphs_to_remove])
               #paragraphs = resync_container(container)
-              self.placeholders = paragraph_and_placeholders[:placeholders]
+              self.placeholders = Word::PlaceholderFinder.get_placeholders(paragraphs)
+              
+              
+             
               
               
 
@@ -57,7 +60,7 @@ module Word
               
               
               
-              clone = Word::PlaceholderFinder.get_placeholders(paragraphs)
+              clone =  paragraph_and_placeholders[:placeholders].dup
 
               cloned_map = clone.map do |placeholder|
                 placeholder.dup.tap { |new_p| new_p.delete(:paragraph_object) }
