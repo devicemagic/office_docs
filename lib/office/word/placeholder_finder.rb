@@ -17,9 +17,10 @@ module Word
 
       PLACEHOLDER_REGEX = /(\{\{[^}]*\}\}|\{%[^%]*%\}|\{%[^}]*\}\}|{%\s*(if|endif|for|endfor)[^%]*%\})/
       # Matches {{... without a closing }} tag
-      UNBALANCED_PLACEHOLDER_BRACES_REGEX = /{{[^{}]*[^{}]*$/
+      UNBALANCED_PLACEHOLDER_BRACES_REGEX = /{{[^{}]*$/
       # Matches {% ... without a closing %} tag, ignores % inside of double quotes
-      UNBALANCED_LUQID_PLACEHOLDER_REGEX = /\{%[^%]*%(?:(?:"[^"]*")[^%]*)*%\}/
+      UNBALANCED_LUQID_PLACEHOLDER_REGEX = /\{%[^%]*%[^}]*$/
+
       def get_placeholders(paragraphs)
         placeholders = []
         paragraphs.each_with_index do |p, i|
