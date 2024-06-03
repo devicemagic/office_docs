@@ -28,6 +28,16 @@ module Word
       start_placeholder_parent != end_placeholder_parent
     end
 
+    def resync_paragraph(container, paragraph_index, paragraph, remove_paragraph = false)
+      container.parse_paragraph_at_index(container.container_node, paragraph_index, paragraph, remove_paragraph)
+      paragraphs = container.paragraphs
+    end
+
+    def resync_paragraphs(container, paragraphs, remove_paragraphs = [])
+      container.parse_paragraphs_at_index(container.container_node, paragraphs, remove_paragraphs)
+      paragraphs = container.paragraphs
+    end
+
     def resync_container(container)
       container.parse_paragraphs(container.container_node)
       paragraphs = container.paragraphs

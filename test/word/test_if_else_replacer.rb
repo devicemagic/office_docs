@@ -3,6 +3,7 @@ require 'date'
 require 'office_docs'
 require 'equivalent-xml'
 require 'pry'
+require 'byebug'
 
 # require all the options
 Dir[File.join(File.dirname(__FILE__) + '/if_else_replacers', "**/*.rb")].each do |f|
@@ -17,7 +18,7 @@ class IfElseReplacerTest < Test::Unit::TestCase
   include IfElseOverParagraphsTest
   include IfElseTableRowTest
 
-  #
+  
   def test_get_placeholders
     doc = Office::WordDocument.new(IN_SAME_PARAGRAPH_IF_ELSE)
     template = Word::Template.new(doc)

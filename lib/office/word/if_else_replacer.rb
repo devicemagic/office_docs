@@ -38,9 +38,49 @@ module Word
           if start_placeholder[:placeholder_text].match(IF_ELSE_START_MATCHER)
             end_index = get_end_index(i)
             raise "Missing endif for if placeholder: #{start_placeholder[:placeholder_text]}" if end_index.nil?
-            replace_if_else(i, end_index)
-            paragraphs = resync_container(container)
-            self.placeholders = Word::PlaceholderFinder.get_placeholders(paragraphs)
+            paragraph_and_placeholders = replace_if_else(i, end_index)
+            if !paragraph_and_placeholders[:paragraph].nil?
+              paragraphs = resync_paragraph(container, i, paragraph_and_placeholders[:paragraph], paragraph_and_placeholders[:remove])
+              self.placeholders = paragraph_and_placeholders[:placeholders]
+            elsif paragraph_and_placeholders[:paragraphs]&.length > 0 
+
+              #byebug
+              paragraphs = resync_paragraphs(container, paragraph_and_placeholders[:paragraphs], paragraph_and_placeholders[:paragraphs_to_remove])
+              #paragraphs = resync_container(container)
+              self.placeholders = Word::PlaceholderFinder.get_placeholders(paragraphs)
+              
+              
+             
+              
+              
+
+              
+              #todo investigate placeholders issue with if/else over paragraphs - currently broken 
+              #self.placeholders = 
+              
+              
+              
+              clone =  paragraph_and_placeholders[:placeholders].dup
+
+              cloned_map = clone.map do |placeholder|
+                placeholder.dup.tap { |new_p| new_p.delete(:paragraph_object) }
+              end
+
+       
+              refactor = self.placeholders.dup
+
+              refactor_map = refactor.map do |placeholder|
+                placeholder.dup.tap { |new_p| new_p.delete(:paragraph_object) }
+              end
+
+           
+
+             byebug if refactor_map != cloned_map
+
+            else
+              paragraphs = resync_container(container)
+              self.placeholders = Word::PlaceholderFinder.get_placeholders(paragraphs)
+            end
             break
           else
             i += 1
@@ -68,11 +108,12 @@ module Word
       start_placeholder = placeholders[start_index]
       end_placeholder = placeholders[end_index]
       inbetween_placeholders = placeholders[(start_index+1)..(end_index-1)]
+      thing = {placeholders: [], paragraph: nil, paragraphs: [], remove: []}
 
       if start_placeholder[:paragraph_index] == end_placeholder[:paragraph_index]
         # if start and end are in the same paragraph
         looper = Word::IfElseReplacers::IfElseInParagraph.new(main_doc, data, options)
-        looper.replace_if_else(start_placeholder, end_placeholder, inbetween_placeholders)
+        thing = looper.replace_if_else(start_placeholder, end_placeholder, inbetween_placeholders, self.placeholders)
       elsif placeholders_are_in_different_table_cells_in_same_row?(start_placeholder, end_placeholder)
         looper = Word::IfElseReplacers::IfElseTableRow.new(main_doc, data, options)
         looper.replace_if_else(start_placeholder, end_placeholder, inbetween_placeholders)
@@ -87,8 +128,9 @@ module Word
       else
         # else its over paragraphs
         looper = Word::IfElseReplacers::IfElseOverParagraphs.new(main_doc, data, options)
-        looper.replace_if_else(start_placeholder, end_placeholder, inbetween_placeholders, placeholders)
+        thing = looper.replace_if_else(start_placeholder, end_placeholder, inbetween_placeholders, placeholders)
       end
+      thing
     rescue => e
       context_info = "Error in #{start_placeholder&.dig(:placeholder_text)}..#{end_placeholder&.dig(:placeholder_text)}"
       raise e.class, [context_info, e.message].join(": ")

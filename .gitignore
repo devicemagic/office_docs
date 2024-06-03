@@ -9,3 +9,4 @@ pkg/
 tags
 .tool-versions
 .bundle
+.byebug_history
